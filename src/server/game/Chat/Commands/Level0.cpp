@@ -151,3 +151,48 @@ bool ChatHandler::HandleServerMotdCommand(const char* /*args*/)
     return true;
 }
 
+bool ChatHandler::HandleShowVotePointsCommand(const char *args)
+{
+    int32 points;
+    if(m_session->GetSecurity() < SEC_MODERATOR)// just show vp for accnt for non gms 
+    {
+        Player *player = m_session->GetPlayer();
+        points = player->GetVotePoints();
+        if (points == -1) 
+            PSendSysMessage(LANG_NEVER_VOTED);
+        else
+            PSendSysMessage(LANG_SHOW_VOTE_POINTS, points);
+        return true;
+    }
+
+    std::string name;
+    Player *player;
+    char *TargetName = strtok((char*)args, " ");
+    if (!TargetName) //if no name entered use target
+    {
+        player = getSelectedPlayer();
+        if (player) //prevent crash with creature as target
+        {
+            points = player->GetVotePoints();
+            if (points == -1)
+                points = 0;
+            PSendSysMessage(LANG_SHOW_VOTE_POINTS_PLAYER, player->GetName(), points);
+        }
+    }
+    else // if name entered
+    {
+        name = TargetName;
+        normalizePlayerName(name);
+        player = sObjectMgr->GetPlayer(name.c_str());
+        if (!player)
+            PSendSysMessage(LANG_PLAYER_NOT_EXIST_OR_OFFLINE, name);
+        else
+        {
+            points = player->GetVotePoints();
+            if (points == -1)
+                points = 0;
+            PSendSysMessage(LANG_SHOW_VOTE_POINTS_PLAYER, player->GetName(), points);
+        }
+    }
+   return true;
+}

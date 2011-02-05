@@ -4706,3 +4706,93 @@ bool ChatHandler::HandleUnbindSightCommand(const char * /*args*/)
     m_session->GetPlayer()->StopCastingBindSight();
     return true;
 }
+
+bool ChatHandler::HandleModifyVotePointsCommand(const char *args)
+{    
+    if(!*args)
+        return false;
+
+    Player *player;
+    int32 newvp;
+    char* amnt_c;
+    char* name_c;
+
+    extractOptFirstArg((char*)args,&name_c,&amnt_c);
+
+    if (!amnt_c)
+        return false;
+    int32 amnt = atoi(amnt_c);
+
+    if (!name_c)
+        return false;    
+    std::string name = name_c;
+
+    normalizePlayerName(name);
+    player = sObjectMgr->GetPlayer(name.c_str());
+    if(!player)
+        return false;
+
+    int32 curvp = player->GetVotePoints();
+    if (curvp == 0)
+        newvp = 0;
+    else if (curvp == -1)
+    {
+        PSendSysMessage("The character your are modifying vote points for has not voted yet.");
+        return false;
+    }
+    else
+        newvp = curvp + amnt;
+    PSendSysMessage(LANG_CHANGED_VOTE_POINTS, player->GetName(), curvp, newvp);
+
+    player->ModVotePoints(amnt);
+    return true;
+}
+
+bool ChatHandler::HandleCheckHasVotedCommand(const char *args)
+{
+    if(!*args)
+        return false;
+
+    Player *player;
+
+    char *name_p = strtok((char*)args, " ");
+    std::string name = name_p;
+
+    normalizePlayerName(name);
+    player = sObjectMgr->GetPlayer(name.c_str()); 
+    if(!player)
+        return false;
+
+    if(player->HasVoted() == false)
+        PSendSysMessage(LANG_HAS_NOT_VOTED, player->GetName());
+    else
+        PSendSysMessage(LANG_HAS_VOTED, player->GetName());
+    return true;
+}
+
+bool ChatHandler::HandleForceVoteCommand(const char *args)
+{
+    if(!*args)
+        return false;
+
+    char *name_p = strtok((char*)args, " ");
+    std::string name = name_p;
+
+    normalizePlayerName(name);
+    Player *player = sObjectMgr->GetPlayer(name.c_str()); 
+
+    if(!player)
+        return false;
+
+    time_t seconds = time (NULL);
+
+    QueryResult result = LoginDatabase.PQuery("SELECT * FROM `voting` WHERE `user_ip` = '%s'", player->GetSession()->GetRemoteAddress().c_str());
+    if (result)
+        LoginDatabase.PQuery("UPDATE `voting` SET `time` = '%u' WHERE `user_ip` = '%s'", seconds, player->GetSession()->GetRemoteAddress().c_str());
+    else
+        LoginDatabase.PQuery("INSERT INTO `voting` (`user_ip`, `time`) VALUES ('%s', '%u')", player->GetSession()->GetRemoteAddress().c_str(), seconds);
+
+    ChatHandler(player).PSendSysMessage(LANG_FORCED_YOUR_VOTE);
+    PSendSysMessage(LANG_FORCED_VOTE, player->GetName());
+    return true;
+}

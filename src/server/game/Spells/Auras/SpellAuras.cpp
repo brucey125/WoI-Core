@@ -894,6 +894,38 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
         }
     }
     // mods at aura apply
+    switch(GetId())
+    {
+    case 71903:
+            if(caster->GetTypeId() == TYPEID_PLAYER && urand(1,5)== 1) //this is needed because I set the weapon in the db to cast this spell on every hit
+            caster->CastSpell(caster, 71905, true); //replace the spell
+            break;
+    case 71905:
+        if (apply)
+        {
+            if(GetStackAmount()== 1)
+                caster->AddAura(72521, caster); //add aura 1
+            if(GetStackAmount() == 6)
+            {
+                caster->RemoveAura(72521); //remove aura 1
+                caster->CastSpell(caster, 72523, false); //add aura 2
+            }
+            if(GetStackAmount() == 10) //final BOOM(Chaosbann)
+            {
+                caster->RemoveAura(72523); //remove aura 2
+                caster->RemoveAura(71905); //remove shards
+                caster->CastSpell(caster, 71904, false); //Chaosban-aoe
+                caster->CastSpell(caster, 73422, false); //Chaosban-buff
+            }
+            break;
+        }
+        if (!apply && aurApp->GetRemoveMode()!= AURA_REMOVE_BY_STACK)
+        {
+            caster->RemoveAura(72521); //remove aura 1
+            caster->RemoveAura(72523); //remove aura 2
+        }
+        break;
+    }
     if (apply)
     {
         // Apply linked auras (On first aura apply)

@@ -351,6 +351,15 @@ ChatCommand * ChatHandler::getCommandTable()
         { NULL,             0,                  false, NULL,                                                "", NULL }
     };
 
+	static ChatCommand votepanelCommandTable[] =
+    {
+        { "show",           SEC_PLAYER,         false, OldHandler<&ChatHandler::HandleShowVotePointsCommand>,           "", NULL },
+        { "modify",         SEC_ADMINISTRATOR,  false, OldHandler<&ChatHandler::HandleModifyVotePointsCommand>,         "", NULL },
+        { "check",          SEC_ADMINISTRATOR,  false, OldHandler<&ChatHandler::HandleCheckHasVotedCommand>,            "", NULL },
+        { "force",          SEC_ADMINISTRATOR,  false, OldHandler<&ChatHandler::HandleForceVoteCommand>,                "", NULL },
+        { NULL,             0,                  false, NULL,                                                "", NULL }
+    };
+
     static ChatCommand commandTable[] =
     {
         { "character",      SEC_GAMEMASTER,     true,  NULL,                                           "", characterCommandTable},
@@ -362,8 +371,10 @@ ChatCommand * ChatHandler::getCommandTable()
         { "reset",          SEC_ADMINISTRATOR,  true,  NULL,                                           "", resetCommandTable    },
         { "instance",       SEC_ADMINISTRATOR,  true,  NULL,                                           "", instanceCommandTable },
         { "server",         SEC_ADMINISTRATOR,  true,  NULL,                                           "", serverCommandTable   },
+		
+		{ "vp",             SEC_ADMINISTRATOR,  true,  NULL,                                           "", votepanelCommandTable },
 
-        { "channel",        SEC_ADMINISTRATOR, true, NULL,                                             "", channelCommandTable  },
+		{ "channel",        SEC_ADMINISTRATOR, true, NULL,                                             "", channelCommandTable  },
 
         { "pet",            SEC_GAMEMASTER,     false, NULL,                                           "", petCommandTable },
         { "ticket",         SEC_MODERATOR,      false,  NULL,                                          "", ticketCommandTable },
@@ -376,9 +387,9 @@ ChatCommand * ChatHandler::getCommandTable()
         { "gmannounce",     SEC_MODERATOR,      true,  OldHandler<&ChatHandler::HandleGMAnnounceCommand>,          "", NULL },
         { "notify",         SEC_MODERATOR,      true,  OldHandler<&ChatHandler::HandleNotifyCommand>,              "", NULL },
         { "gmnotify",       SEC_MODERATOR,      true,  OldHandler<&ChatHandler::HandleGMNotifyCommand>,            "", NULL },
-        { "appear",         SEC_MODERATOR,      false, OldHandler<&ChatHandler::HandleAppearCommand>,              "", NULL },
-        { "summon",         SEC_MODERATOR,      false, OldHandler<&ChatHandler::HandleSummonCommand>,              "", NULL },
-        { "groupsummon",    SEC_MODERATOR,      false, OldHandler<&ChatHandler::HandleGroupSummonCommand>,         "", NULL },
+        { "goname",         SEC_MODERATOR,      false, OldHandler<&ChatHandler::HandleGoNameCommand>,              "", NULL },
+        { "namego",         SEC_MODERATOR,      false, OldHandler<&ChatHandler::HandleNameGoCommand>,              "", NULL },
+        { "groupgo",    SEC_MODERATOR,      false, OldHandler<&ChatHandler::HandleGroupGoCommand>,         "", NULL },
         { "commands",       SEC_PLAYER,         true,  OldHandler<&ChatHandler::HandleCommandsCommand>,            "", NULL },
         { "demorph",        SEC_GAMEMASTER,     false, OldHandler<&ChatHandler::HandleDeMorphCommand>,             "", NULL },
         { "die",            SEC_ADMINISTRATOR,  false, OldHandler<&ChatHandler::HandleDieCommand>,                 "", NULL },
@@ -428,6 +439,7 @@ ChatCommand * ChatHandler::getCommandTable()
         { "repairitems",    SEC_GAMEMASTER,     true,  OldHandler<&ChatHandler::HandleRepairitemsCommand>,         "", NULL },
         { "waterwalk",      SEC_GAMEMASTER,     false, OldHandler<&ChatHandler::HandleWaterwalkCommand>,           "", NULL },
 
+		{ "heal",           SEC_GAMEMASTER,     true,  OldHandler<&ChatHandler::HandleHealCommand>,                "", NULL },
         { "freeze",         SEC_MODERATOR,  false, OldHandler<&ChatHandler::HandleFreezeCommand>,              "", NULL },
         { "unfreeze",       SEC_MODERATOR,  false, OldHandler<&ChatHandler::HandleUnFreezeCommand>,            "", NULL },
         { "listfreeze",     SEC_MODERATOR,  false, OldHandler<&ChatHandler::HandleListFreezeCommand>,          "", NULL },

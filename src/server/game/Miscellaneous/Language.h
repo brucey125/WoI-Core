@@ -1049,6 +1049,21 @@ enum TrinityStrings
     // Use for custom patches             11000-11999
     LANG_AUTO_BROADCAST                 = 11000,
     LANG_INVALID_REALMID                = 11001,
+	LANG_NOGOSELECTED                   = 11002,
+    LANG_HEAL_PLAYER                    = 11003,
+    LANG_SHOW_VOTE_POINTS               = 11004,
+    LANG_SHOW_VOTE_POINTS_PLAYER        = 11005,
+    LANG_HAS_NOT_VOTED                  = 11006,
+    LANG_HAS_VOTED                      = 11007,
+    LANG_CHANGED_VOTE_POINTS            = 11008,
+    LANG_NEVER_VOTED                    = 11009,
+    LANG_FORCED_VOTE                    = 11010,
+    LANG_FORCED_YOUR_VOTE               = 11011,
+    LANG_TELE_VOTE_CHECK_FAILED         = 11012,
+	LANG_NOT_ENOUGH_VOTE_POINTS         = 11013,
+    LANG_NO_GUILD_HOUSE                 = 11014,
+    LANG_NOW_HAVE_X_VOTE_POINTS         = 11015,
+    LANG_NO_GUILD_HOUSE_TELE_OUT        = 11016,
 
     // NOT RESERVED IDS                   12000-1999999999
     // `db_script_string` table index     2000000000-2000009999 (MIN_DB_SCRIPT_STRING_ID-MAX_DB_SCRIPT_STRING_ID)

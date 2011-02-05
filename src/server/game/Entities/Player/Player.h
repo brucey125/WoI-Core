@@ -1951,6 +1951,18 @@ class Player : public Unit, public GridObject<Player>
         void UpdateSkillsToMaxSkillsForLevel();             // for .levelup
         void ModifySkillBonus(uint32 skillid,int32 val, bool talent);
 
+		/**********************************************************/
+        /***                VOTE SYSTEM                         ***/
+        /**********************************************************/
+        
+        int32 GetVotePoints();
+		void InstanceReset();
+        void ModVotePoints(int amnt, bool IsRequired = false);
+        bool HasVoted();
+        void UnbindAllInst();
+        bool AddItemVS(uint32 itemId, uint32 count, bool OverflowMail = true);
+        uint32 GetGuildHouseMask();
+
         /*********************************************************/
         /***                  PVP SYSTEM                       ***/
         /*********************************************************/

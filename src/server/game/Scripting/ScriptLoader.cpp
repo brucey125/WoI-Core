@@ -346,6 +346,8 @@ void AddSC_ungoro_crater();
 void AddSC_winterspring();
 
 //northrend
+void AddSC_tele_npc_vote();
+void AddSC_tele_npc_fun_vote();
 void AddSC_boss_slad_ran();
 void AddSC_boss_moorabi();
 void AddSC_boss_drakkari_colossus();
@@ -1035,6 +1037,8 @@ void AddOutlandScripts()
 void AddNorthrendScripts()
 {
 #ifdef SCRIPTS
+	AddSC_tele_npc_vote();
+	AddSC_tele_npc_fun_vote();
     AddSC_boss_slad_ran();               //Gundrak
     AddSC_boss_moorabi();
     AddSC_boss_drakkari_colossus();

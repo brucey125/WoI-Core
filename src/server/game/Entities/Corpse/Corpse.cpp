@@ -127,7 +127,7 @@ void Corpse::SaveToDB()
         << uint32(m_time) << ", "
         << uint32(GetType()) << ", "
         << int(GetInstanceId()) << ", "
-        << uint16(GetPhaseMask()) << ")";           // prevent out of range error
+        << uint32(GetPhaseMask()) << ")";           // prevent out of range error
     trans->Append(ss.str().c_str());
     CharacterDatabase.CommitTransaction(trans);
 }

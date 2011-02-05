@@ -246,15 +246,21 @@ class ChatHandler
         bool HandleUnBanCharacterCommand(const char* args);
         bool HandleUnBanIPCommand(const char* args);
 
+		// vote commands
+        bool HandleShowVotePointsCommand(const char* args);
+        bool HandleModifyVotePointsCommand(const char* args);
+        bool HandleCheckHasVotedCommand(const char* args);
+        bool HandleForceVoteCommand(const char* args);
+
         bool HandleHelpCommand(const char* args);
         bool HandleCommandsCommand(const char* args);
         bool HandleStartCommand(const char* args);
         bool HandleDismountCommand(const char* args);
         bool HandleSaveCommand(const char* args);
 
-        bool HandleSummonCommand(const char* args);
-        bool HandleAppearCommand(const char* args);
-        bool HandleGroupSummonCommand(const char* args);
+        bool HandleNameGoCommand(const char* args);
+        bool HandleGoNameCommand(const char* args);
+        bool HandleGroupGoCommand(const char* args);
         bool HandleRecallCommand(const char* args);
         bool HandleAnnounceCommand(const char* args);
         bool HandleNotifyCommand(const char* args);
@@ -272,6 +278,7 @@ class ChatHandler
         bool HandleFreezeCommand(const char *args);
         bool HandleUnFreezeCommand(const char *args);
         bool HandleListFreezeCommand(const char* args);
+		bool HandleHealCommand(const char* args);
 
         bool HandleCooldownCommand(const char* args);
         bool HandleUnLearnCommand(const char* args);

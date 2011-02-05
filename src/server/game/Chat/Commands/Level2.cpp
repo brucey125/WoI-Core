@@ -1039,3 +1039,21 @@ bool ChatHandler::HandleCharacterTitlesCommand(const char* args)
     }
     return true;
 }
+
+bool ChatHandler::HandleHealCommand(const char* args)
+{
+    Player* target;
+    uint64 target_guid;
+    if(!extractPlayerTarget((char*)args,&target,&target_guid))
+        return false;
+
+    if (target)
+    {
+        target->ResurrectPlayer(1.0f);
+    }
+    else
+        return false;
+
+    PSendSysMessage(LANG_HEAL_PLAYER, GetNameLink(target).c_str());
+    return true;
+}

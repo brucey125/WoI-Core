@@ -259,6 +259,7 @@ public:
 		pPlayer->ADD_GOSSIP_ITEM( 5, "Summit Course"					, GOSSIP_SENDER_MAIN, 10035);
 		pPlayer->ADD_GOSSIP_ITEM( 5, "Beach House"						, GOSSIP_SENDER_MAIN, 10040);
 		pPlayer->ADD_GOSSIP_ITEM( 5, "Party House"						, GOSSIP_SENDER_MAIN, 10045);
+		pPlayer->ADD_GOSSIP_ITEM( 5, "Dalaran Mall"						, GOSSIP_SENDER_MAIN, 10050);
 		pPlayer->ADD_GOSSIP_ITEM( 7, "<- [Main Menu]"					, GOSSIP_SENDER_MAIN, 5005);
 	
 		pPlayer->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE,pCreature->GetGUID());
@@ -770,6 +771,11 @@ public:
 	case 10045: // Beach House
 		pPlayer->CLOSE_GOSSIP_MENU();
 		pPlayer->TeleportTo(1, -5834.86f, -1827.09f, 8.889f, 0.43f);
+	break;
+
+	case 10050: // Dalaran Mall
+		pPlayer->CLOSE_GOSSIP_MENU();
+		pPlayer->TeleportTo(571, 5802.79f, 702.33f, 618.59f, 4.04f);
 	break;
 
 	case 15001: // Buff Blessing of Kings

@@ -267,14 +267,14 @@ DROP TABLE IF EXISTS `channels`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `channels` (
-  `m_name` varchar(128) NOT NULL,
-  `m_team` int(10) unsigned NOT NULL,
-  `m_announce` tinyint(3) unsigned NOT NULL DEFAULT '1',
-  `m_ownership` tinyint(3) unsigned NOT NULL DEFAULT '1',
-  `m_password` varchar(32) DEFAULT NULL,
-  `BannedList` text,
-  `last_used` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`m_name`,`m_team`)
+  `name` varchar(128) NOT NULL,
+  `team` int(10) unsigned NOT NULL,
+  `announce` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `ownership` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `password` varchar(32) DEFAULT NULL,
+  `bannedList` text,
+  `lastUsed` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`name`,`team`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Channel System';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -724,7 +724,7 @@ CREATE TABLE `character_inventory` (
   `slot` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `item` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'Item Global Unique Identifier',
   PRIMARY KEY (`item`),
-  UNIQUE KEY (`guid`,`bag`,`slot`),
+  UNIQUE KEY `guid` (`guid`,`bag`,`slot`),
   KEY `idx_guid` (`guid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Player System';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1224,7 +1224,7 @@ CREATE TABLE `corpse` (
   `position_z` float NOT NULL DEFAULT '0',
   `orientation` float NOT NULL DEFAULT '0',
   `map` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'Map Identifier',
-  `phaseMask` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `phaseMask` smallint(5) unsigned NOT NULL DEFAULT '1',
   `displayId` int(10) unsigned NOT NULL DEFAULT '0',
   `itemCache` text NOT NULL,
   `bytes1` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1285,10 +1285,10 @@ DROP TABLE IF EXISTS `game_event_condition_save`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_event_condition_save` (
-  `event_id` smallint(5) unsigned NOT NULL,
+  `eventEntry` tinyint(3) unsigned NOT NULL,
   `condition_id` int(10) unsigned NOT NULL DEFAULT '0',
   `done` float DEFAULT '0',
-  PRIMARY KEY (`event_id`,`condition_id`)
+  PRIMARY KEY (`eventEntry`,`condition_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1309,10 +1309,10 @@ DROP TABLE IF EXISTS `game_event_save`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_event_save` (
-  `event_id` smallint(5) unsigned NOT NULL,
+  `eventEntry` tinyint(3) unsigned NOT NULL,
   `state` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `next_start` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`event_id`)
+  PRIMARY KEY (`eventEntry`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

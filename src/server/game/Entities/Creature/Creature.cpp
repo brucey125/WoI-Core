@@ -49,7 +49,6 @@
 #include "Group.h"
 // apply implementation of the singletons
 
-
 TrainerSpell const* TrainerSpellData::Find(uint32 spell_id) const
 {
     TrainerSpellMap::const_iterator itr = spellList.find(spell_id);
@@ -1549,7 +1548,7 @@ void Creature::setDeathState(DeathState s)
         if (GetCreatureInfo()->InhabitType & INHABIT_WATER)
             AddUnitMovementFlag(MOVEMENTFLAG_SWIMMING);
         SetUInt32Value(UNIT_NPC_FLAGS, cinfo->npcflag);
-        ClearUnitState(UNIT_STAT_ALL_STATE);
+        ClearUnitState(uint32(UNIT_STAT_ALL_STATE));
         SetMeleeDamageSchool(SpellSchools(cinfo->dmgschool));
         LoadCreaturesAddon(true);
         Motion_Initialize();
@@ -1612,7 +1611,7 @@ void Creature::Respawn(bool force)
         {
             setDeathState(JUST_DIED);
             i_motionMaster.Clear();
-            ClearUnitState(UNIT_STAT_ALL_STATE);
+            ClearUnitState(uint32(UNIT_STAT_ALL_STATE));
             LoadCreaturesAddon(true);
         }
         else
@@ -1664,7 +1663,7 @@ void Creature::ForcedDespawn(uint32 timeMSToDespawn)
 void Creature::DespawnOrUnsummon(uint32 msTimeToDespawn /*= 0*/)
 {
     if (TempSummon* summon = this->ToTempSummon())
-        summon->UnSummon();
+        summon->UnSummon(msTimeToDespawn);
     else
         ForcedDespawn(msTimeToDespawn);
 }

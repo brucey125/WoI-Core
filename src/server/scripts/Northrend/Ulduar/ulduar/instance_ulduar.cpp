@@ -18,21 +18,10 @@
 #include "ScriptPCH.h"
 #include "ulduar.h"
 
-enum eGameObjects
+static const DoorData doorData[] =
 {
-    GO_KOLOGARN_CHEST_HERO  = 195047,
-    GO_KOLOGARN_CHEST       = 195046,
-    GO_KOLOGARN_BRIDGE      = 194232,
-    GO_KOLOGARN_DOOR        = 194553,
-    GO_THORIM_CHEST_HERO    = 194315,
-    GO_THORIM_CHEST         = 194314,
-    GO_HODIR_CHEST_HERO     = 194308,
-    GO_HODIR_CHEST          = 194307,
-    GO_FREYA_CHEST_HERO     = 194325,
-    GO_FREYA_CHEST          = 194324,
-    GO_LEVIATHAN_DOOR       = 194905,
-    GO_LEVIATHAN_GATE       = 194630,
-    GO_VEZAX_DOOR           = 194750,
+    {GO_LEVIATHAN_DOOR, TYPE_LEVIATHAN, DOOR_TYPE_ROOM,     BOUNDARY_S},
+    {0,                 0,              DOOR_TYPE_ROOM,     BOUNDARY_NONE}
 };
 
 class instance_ulduar : public InstanceMapScript
@@ -47,7 +36,7 @@ public:
 
     struct instance_ulduar_InstanceMapScript : public InstanceScript
     {
-        instance_ulduar_InstanceMapScript(Map* pMap) : InstanceScript(pMap) { Initialize(); };
+        instance_ulduar_InstanceMapScript(InstanceMap* map) : InstanceScript(map) { Initialize(); };
 
         uint32 uiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
@@ -70,7 +59,6 @@ public:
         uint64 uiVezaxGUID;
         uint64 uiYoggSaronGUID;
         uint64 uiAlgalonGUID;
-        uint64 uiLeviathanDoor[7];
         uint64 uiLeviathanGateGUID;
         uint64 uiVezaxDoorGUID;
 
@@ -86,6 +74,7 @@ public:
         void Initialize()
         {
             SetBossNumber(MAX_ENCOUNTER);
+            LoadDoorData(doorData);
             uiIgnisGUID             = 0;
             uiRazorscaleGUID        = 0;
             uiExpCommanderGUID      = 0;
@@ -113,7 +102,6 @@ public:
 
             memset(&uiEncounter, 0, sizeof(uiEncounter));
             memset(&uiAssemblyGUIDs, 0, sizeof(uiAssemblyGUIDs));
-            memset(&uiLeviathanDoor, 0, sizeof(uiLeviathanDoor));
         }
 
         bool IsEncounterInProgress() const
@@ -236,15 +224,12 @@ public:
                     uiFreyaChestGUID = go->GetGUID();
                     break;
                 case GO_LEVIATHAN_DOOR:
-                    uiLeviathanDoor[flag] = go->GetGUID();
-                    HandleGameObject(NULL, true, go);
-                    flag++;
-                    if (flag == 7)
-                        flag =0;
+                    AddDoor(go, true);
                     break;
                 case GO_LEVIATHAN_GATE:
                     uiLeviathanGateGUID = go->GetGUID();
-                    HandleGameObject(NULL, false, go);
+                    if (GetBossState(TYPE_LEVIATHAN) == DONE)
+                        go->SetGoState(GO_STATE_ACTIVE_ALTERNATIVE);
                     break;
                 case GO_VEZAX_DOOR:
                     uiVezaxDoorGUID = go->GetGUID();
@@ -253,13 +238,25 @@ public:
             }
         }
 
-        void ProcessEvent(GameObject* /*go*/, uint32 uiEventId)
+        void OnGameObjectRemove(GameObject* go)
+        {
+            switch (go->GetEntry())
+            {
+                case GO_LEVIATHAN_DOOR:
+                    AddDoor(go, false);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        void ProcessEvent(GameObject* /*go*/, uint32 eventId)
         {
             // Flame Leviathan's Tower Event triggers
            Creature* pFlameLeviathan = instance->GetCreature(uiLeviathanGUID);
 
             if (pFlameLeviathan && pFlameLeviathan->isAlive()) //No leviathan, no event triggering ;)
-                switch(uiEventId)
+                switch(eventId)
                 {
                     case EVENT_TOWER_OF_STORM_DESTROYED:
                         pFlameLeviathan->AI()->DoAction(1);
@@ -276,6 +273,10 @@ public:
                 }
         }
 
+        void ProcessEvent(Unit* /*unit*/, uint32 /*eventId*/)
+        {
+        }
+
         bool SetBossState(uint32 type, EncounterState state)
         {
             if (!InstanceScript::SetBossState(type, state))
@@ -284,13 +285,6 @@ public:
             switch (type)
             {
                 case TYPE_LEVIATHAN:
-                    if (state == IN_PROGRESS)
-                        for (uint8 uiI = 0; uiI < 7; ++uiI)
-                            HandleGameObject(uiLeviathanDoor[uiI],false);
-                    else
-                        for (uint8 uiI = 0; uiI < 7; ++uiI)
-                            HandleGameObject(uiLeviathanDoor[uiI],true);
-                    break;
                 case TYPE_IGNIS:
                 case TYPE_RAZORSCALE:
                 case TYPE_XT002:
@@ -471,7 +465,6 @@ public:
     };
 
 };
-
 
 void AddSC_instance_ulduar()
 {

@@ -15,7 +15,6 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include "DatabaseEnv.h"
 #include "SQLStorage.h"
 #include "ObjectMgr.h"
@@ -62,7 +61,6 @@ void SmartWaypointMgr::LoadFromDB()
         x = fields[2].GetFloat();
         y = fields[3].GetFloat();
         z = fields[4].GetFloat();
-
 
         WayPoint *wp = new WayPoint(id, x, y, z);
 
@@ -316,7 +314,8 @@ bool SmartAIMgr::IsEventValid(SmartScriptHolder &e)
     }
     else
     {
-        switch (e.event.type)
+        uint32 type = e.event.type;
+        switch (type)
         {
             case SMART_EVENT_UPDATE:
             case SMART_EVENT_UPDATE_IC:
@@ -581,7 +580,6 @@ bool SmartAIMgr::IsEventValid(SmartScriptHolder &e)
             if (!IsQuestValid(e, e.action.castCreatureOrGO.quest)) return false;
             if (!IsSpellValid(e, e.action.castCreatureOrGO.spell)) return false;
             break;
-
 
 
         case SMART_ACTION_SET_EVENT_PHASE:

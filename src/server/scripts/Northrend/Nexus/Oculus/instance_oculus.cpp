@@ -81,6 +81,10 @@ public:
             }
         }
 
+        void ProcessEvent(GameObject* /*go*/, uint32 /*eventId*/)
+        {
+        }
+
         void ProcessEvent(Unit* /*unit*/, uint32 eventId)
         {
             if (eventId != EVENT_CALL_DRAGON)
@@ -227,7 +231,6 @@ public:
 
             char dataHead1, dataHead2;
 
-
             std::istringstream loadStream(in);
             loadStream >> dataHead1 >> dataHead2;
 
@@ -261,7 +264,6 @@ public:
     };
 
 };
-
 
 void AddSC_instance_oculus()
 {

@@ -4805,7 +4805,7 @@ SpellCastResult Spell::CheckCast(bool strict)
                 return SPELL_FAILED_TARGET_AURASTATE;
 
             // Not allow casting on flying player or on vehicle player (if caster isnt vehicle)
-            if (target->HasUnitState(UNIT_STAT_IN_FLIGHT) || (target->HasUnitState(UNIT_STAT_ONVEHICLE) && target->GetVehicleBase() != m_caster))
+            if (target->HasUnitState(UNIT_STAT_IN_FLIGHT) /*|| (target->HasUnitState(UNIT_STAT_ONVEHICLE) && target->GetVehicleBase() != m_caster)*/)
                 return SPELL_FAILED_BAD_TARGETS;
 
             if (!m_IsTriggeredSpell && !m_caster->canSeeOrDetect(target))
@@ -5331,13 +5331,20 @@ SpellCastResult Spell::CheckCast(bool strict)
                     return SPELL_FAILED_BAD_TARGETS;
 
                 // check if our map is dungeon
-                if (sMapStore.LookupEntry(m_caster->GetMapId())->IsDungeon())
+                MapEntry const* map = sMapStore.LookupEntry(m_caster->GetMapId());
+                if (map->IsDungeon())
                 {
-                    Map const* pMap = m_caster->GetMap();
-                    InstanceTemplate const* instance = ObjectMgr::GetInstanceTemplate(pMap->GetId());
+                    uint32 mapId = m_caster->GetMap()->GetId();
+                    Difficulty difficulty = m_caster->GetMap()->GetDifficulty();
+                    if (map->IsRaid())
+                        if (InstancePlayerBind* targetBind = target->GetBoundInstance(mapId, difficulty))
+                            if (targetBind->perm && targetBind != m_caster->ToPlayer()->GetBoundInstance(mapId, difficulty))
+                                return SPELL_FAILED_TARGET_LOCKED_TO_RAID_INSTANCE;
+
+                    InstanceTemplate const* instance = ObjectMgr::GetInstanceTemplate(mapId);
                     if (!instance)
                         return SPELL_FAILED_TARGET_NOT_IN_INSTANCE;
-                    if (!target->Satisfy(sObjectMgr->GetAccessRequirement(pMap->GetId(), pMap->GetDifficulty()), pMap->GetId()))
+                    if (!target->Satisfy(sObjectMgr->GetAccessRequirement(mapId, difficulty), mapId))
                         return SPELL_FAILED_BAD_TARGETS;
                 }
                 break;
@@ -5993,8 +6000,15 @@ SpellCastResult Spell::CheckItems()
     // do not take reagents for these item casts
     if (!(m_CastItem && m_CastItem->GetProto()->Flags & ITEM_PROTO_FLAG_TRIGGERED_CAST))
     {
+        bool checkReagents = !m_IsTriggeredSpell && !p_caster->CanNoReagentCast(m_spellInfo);
+        // Not own traded item (in trader trade slot) requires reagents even if triggered spell
+        if (!checkReagents)
+            if (Item* targetItem = m_targets.getItemTarget())
+                if (targetItem->GetOwnerGUID() != m_caster->GetGUID())
+                    checkReagents = true;
+
         // check reagents (ignore triggered spells with reagents processed by original spell) and special reagent ignore case.
-        if (!m_IsTriggeredSpell && !p_caster->CanNoReagentCast(m_spellInfo))
+        if (checkReagents)
         {
             for (uint32 i = 0; i < MAX_SPELL_REAGENTS; i++)
             {
@@ -6021,7 +6035,7 @@ SpellCastResult Spell::CheckItems()
                         }
                     }
                 }
-                if (!p_caster->HasItemCount(itemid,itemcount))
+                if (!p_caster->HasItemCount(itemid, itemcount))
                     return SPELL_FAILED_ITEM_NOT_READY;         //0x54
             }
         }

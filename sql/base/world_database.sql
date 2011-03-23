@@ -650,6 +650,8 @@ INSERT INTO `command` VALUES
 ('reload spell_target_position',3,'Syntax: .reload spell_target_position\nReload spell_target_position table.'),
 ('reload spell_threats',3,'Syntax: .reload spell_threats\nReload spell_threats table.'),
 ('reload trinity_string',3,'Syntax: .reload trinity_string\nReload trinity_string table.'),
+('reload vehicle_accessory', 3, 'Syntax: .reload vehicle_accessory\n\nReloads GUID-based vehicle accessory definitions from the database.'),
+('reload vehicle_template_accessory', 3, 'Syntax: .reload vehicle_template_accessory\n\nReloads entry-based vehicle accessory definitions from the database.'),
 ('reload waypoint_scripts',3,'Syntax: .reload waypoint_scripts\nReload waypoint_scripts table.'),
 ('repairitems',2,'Syntax: .repairitems\r\n\r\nRepair all selected player''s items.'),
 ('reset',3,'Syntax: .reset $subcommand\nType .reset to see the list of possible subcommands or .help reset $subcommand to see info on subcommands'),
@@ -18378,6 +18380,11 @@ INSERT INTO `spell_proc_event` (`entry`,`SchoolMask`,`SpellFamilyName`,`SpellFam
 ( 11180, 0x10,   3, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,   0), -- Winter's Chill (Rank 1)
 ( 11185, 0x00,   3, 0x00000080, 0x00000000, 0x00000000, 0x00050000, 0x00000000,   0,   0,   0), -- Improved Blizzard (Rank 1)
 ( 11255, 0x00,   3, 0x00004000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,   0), -- Improved Counterspell (Rank 1)
+( 11213, 0x00,   3, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,   0), -- Arcane Concentration (Rank 1)
+( 12574, 0x00,   3, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,   0), -- Arcane Concentration (Rank 2)
+( 12575, 0x00,   3, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,   0), -- Arcane Concentration (Rank 3)
+( 12576, 0x00,   3, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,   0), -- Arcane Concentration (Rank 4)
+( 12577, 0x00,   3, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,   0), -- Arcane Concentration (Rank 5)
 ( 12169, 0x00,   0, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000040,   0,   0,   0), -- Shield Block
 ( 12289, 0x00,   4, 0x00000002, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,   0), -- Improved Hamstring (Rank 1)
 ( 12298, 0x00,   0, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000070,   0,   0,   0), -- Shield Specialization (Rank 1)
@@ -19118,6 +19125,7 @@ INSERT INTO `spell_proc_event` (`entry`,`SchoolMask`,`SpellFamilyName`,`SpellFam
 ( 55640, 0x00,   0, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,  45), -- Lightweave Embroidery
 ( 55677, 0x00,   6, 0x00000000, 0x00000001, 0x00000000, 0x00000000, 0x00000000,   0,   0,   0), -- Glyph of Dispel Magic
 ( 55680, 0x00,   6, 0x00000200, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,   0), -- Glyph of Prayer of Healing
+( 55681, 0x00,   6, 0x00008000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,   0), -- Glyph of Shadow Word: Pain
 ( 55689, 0x00,   0, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000002,   0,   0,   0), -- Glyph of Shadow
 ( 55747, 0x00,   0, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,  45), -- Argent Fury
 ( 55768, 0x00,   0, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,   0,   0,  45), -- Darkglow Embroidery
@@ -27292,7 +27300,7 @@ INSERT INTO `trinity_string` (`entry`,`content_default`,`content_loc1`,`content_
 (536, '   Home movement used for player?!?', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (537, '   Taxi flight', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (538, '   Unknown movement generator (%u)', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(539, 'Player selected NPC\nGUID: %u.\nFaction: %u.\nnpcFlags: %u.\nEntry: %u.\nDisplayID: %u (Native: %u).', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(539, 'Player selected NPC\nDB GUID: %u, current GUID: %u.\nFaction: %u.\nnpcFlags: %u.\nEntry: %u.\nDisplayID: %u (Native: %u).', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (540, 'Level: %u.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (541, 'Health (base): %u. (max): %u. (current): %u.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (542, 'Field Flags: %u.\nDynamic Flags: %u.\nFaction Template: %u.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
@@ -27755,13 +27763,13 @@ INSERT INTO `trinity_string` (`entry`,`content_default`,`content_loc1`,`content_
 UNLOCK TABLES;
 
 --
--- Table structure for table `vehicle_accessory`
+-- Table structure for table `vehicle_template_accessory`
 --
 
-DROP TABLE IF EXISTS `vehicle_accessory`;
+DROP TABLE IF EXISTS `vehicle_template_accessory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `vehicle_accessory` (
+CREATE TABLE `vehicle_template_accessory` (
   `entry` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT 0,
   `accessory_entry` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT 0,
   `seat_id` TINYINT(1) SIGNED NOT NULL DEFAULT 0,
@@ -27776,17 +27784,47 @@ AVG_ROW_LENGTH=0;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `vehicle_accessory`
+-- Dumping data for table `vehicle_template_accessory`
 --
 
-LOCK TABLES `vehicle_accessory` WRITE;
-/*!40000 ALTER TABLE `vehicle_accessory` DISABLE KEYS */;
-INSERT INTO `vehicle_accessory` VALUES
+LOCK TABLES `vehicle_template_accessory` WRITE;
+/*!40000 ALTER TABLE `vehicle_template_accessory` DISABLE KEYS */;
+INSERT INTO `vehicle_template_accessory` VALUES
 (36476,36477,0,0, 'Krick and Ick'),
 (36661,36658,0,0, 'Scourgelord Tyrannus and Rimefang'),
 (36891,31260,0,0, 'Ymirjar Skycaller on Drake'),
 (36678,38309,0,1, 'Professor Putricide - trigger'),
 (36678,38308,1,1, 'Professor Putricide - trigger');
+/*!40000 ALTER TABLE `vehicle_template_accessory` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `vehicle_accessory`
+--
+
+DROP TABLE IF EXISTS `vehicle_accessory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vehicle_accessory` (
+  `guid` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT 0,
+  `accessory_entry` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT 0,
+  `seat_id` TINYINT(1) SIGNED NOT NULL DEFAULT 0,
+  `minion` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+  `description` TEXT NOT NULL,
+  PRIMARY KEY (`accessory_entry`, `seat_id`)
+)
+COLLATE=utf8_general_ci
+ENGINE=MyISAM
+ROW_FORMAT=FIXED
+AVG_ROW_LENGTH=0;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vehicle_accessory`
+--
+
+LOCK TABLES `vehicle_accessory` WRITE;
+/*!40000 ALTER TABLE `vehicle_accessory` DISABLE KEYS */;
 /*!40000 ALTER TABLE `vehicle_accessory` ENABLE KEYS */;
 UNLOCK TABLES;
 

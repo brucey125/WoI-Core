@@ -2811,7 +2811,7 @@ DiminishingGroup GetDiminishingReturnsGroupForSpell(SpellEntry const* spellproto
         {
             // Sap 0x80 Gouge 0x8
             if (spellproto->SpellFamilyFlags[0] & 0x88)
-                return DIMINISHING_POLYMORPH;
+                return DIMINISHING_KNOCKOUT;
             // Blind
             else if (spellproto->SpellFamilyFlags[0] & 0x1000000)
                 return DIMINISHING_FEAR_BLIND;
